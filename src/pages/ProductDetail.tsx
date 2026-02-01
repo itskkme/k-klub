@@ -1,6 +1,7 @@
 
 import { useState, useRef, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Heart,
   Share2,
@@ -18,6 +19,8 @@ import { db } from "@/lib/firebase";
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -376,7 +379,13 @@ const ProductDetail = () => {
               {/* Actions */}
               <div className="product-detail flex gap-4 mb-8">
                 <button
-                  onClick={() => setShowBuyModal(true)}
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/auth");
+                      return;
+                    }
+                    setShowBuyModal(true);
+                  }}
                   className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-lg btn-red flex items-center justify-center gap-2 transition-all"
                 >
                   <span>Buy Now</span>

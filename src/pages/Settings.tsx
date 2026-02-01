@@ -13,6 +13,7 @@ import {
   Globe,
   Mail,
   Trash2,
+  LogIn,
 } from "lucide-react";
 import gsap from "gsap";
 import Navbar from "@/components/layout/Navbar";
@@ -191,11 +192,14 @@ const Settings = () => {
 
                 <div className="border-t border-border mt-4 pt-4">
                   <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-destructive hover:bg-destructive/10 transition-colors"
+                    onClick={() => user ? handleLogout() : navigate("/auth")}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${user
+                      ? "text-destructive hover:bg-destructive/10"
+                      : "text-primary hover:bg-primary/10"
+                      }`}
                   >
-                    <LogOut className="w-5 h-5" />
-                    <span>Log Out</span>
+                    {user ? <LogOut className="w-5 h-5" /> : <LogIn className="w-5 h-5" />}
+                    <span>{user ? "Log Out" : "Log In"}</span>
                   </button>
                 </div>
               </div>
@@ -212,45 +216,59 @@ const Settings = () => {
                     </h2>
 
                     <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">
-                          Full Name
-                        </label>
-                        <input
-                          type="text"
-                          value={profileData.name}
-                          onChange={(e) =>
-                            setProfileData({ ...profileData, name: e.target.value })
-                          }
-                          className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground input-luxury"
-                          placeholder="Enter your name"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          value={profileData.email}
-                          disabled
-                          className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-muted-foreground input-luxury cursor-not-allowed opacity-70"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">
-                          Phone
-                        </label>
-                        <input
-                          type="tel"
-                          value={profileData.phone}
-                          onChange={(e) =>
-                            setProfileData({ ...profileData, phone: e.target.value })
-                          }
-                          className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground input-luxury"
-                          placeholder="Enter your phone number"
-                        />
-                      </div>
+                      {user ? (
+                        <>
+                          <div>
+                            <label className="block text-sm font-medium text-foreground mb-2">
+                              Full Name
+                            </label>
+                            <input
+                              type="text"
+                              value={profileData.name}
+                              onChange={(e) =>
+                                setProfileData({ ...profileData, name: e.target.value })
+                              }
+                              className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground input-luxury"
+                              placeholder="Enter your name"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-foreground mb-2">
+                              Email
+                            </label>
+                            <input
+                              type="email"
+                              value={profileData.email}
+                              disabled
+                              className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-muted-foreground input-luxury cursor-not-allowed opacity-70"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-foreground mb-2">
+                              Phone
+                            </label>
+                            <input
+                              type="tel"
+                              value={profileData.phone}
+                              onChange={(e) =>
+                                setProfileData({ ...profileData, phone: e.target.value })
+                              }
+                              className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground input-luxury"
+                              placeholder="Enter your phone number"
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className="text-muted-foreground mb-4">Please log in to view and edit your profile information.</p>
+                          <button
+                            onClick={() => navigate("/auth")}
+                            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg btn-red"
+                          >
+                            Log In
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     <button
