@@ -78,12 +78,15 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
         onMouseLeave={handleMouseLeave}
       >
         {/* Product Image */}
-        <img
-          ref={imageRef}
-          src={product.images && product.images.length > 0 ? product.images[0] : (product.image || "")}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
+        {/* Product Image Container */}
+        <div className="aspect-[3/4] w-full overflow-hidden bg-gray-100">
+          <img
+            ref={imageRef}
+            src={product.images && product.images.length > 0 ? product.images[0] : (product.image || "")}
+            alt={product.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
