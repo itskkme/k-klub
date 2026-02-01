@@ -24,7 +24,7 @@ const queryClient = new QueryClient();
 
 const App = () => {
   // Initialize Google Analytics
-  ReactGA.initialize("G-TL6WVD7G58");
+  ReactGA.initialize("G-Z2G6N1V4WC");
 
   return (
     <QueryClientProvider client={queryClient}>
