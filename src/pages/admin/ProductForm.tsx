@@ -36,12 +36,16 @@ const ProductForm = () => {
 
     useEffect(() => {
         if (isEdit && id) {
-            const fetchProduct = () => {
+            const fetchProduct = async () => {
                 try {
-                    // Read from localStorage
-                    const stored = localStorage.getItem('k-klub-products');
-                    const products = stored ? JSON.parse(stored) : [];
-                    const product = products.find((p: any) => p.id === id);
+                    const { supabase } = await import('@/lib/supabase');
+                    const { data: product, error } = await supabase
+                        .from('products')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+
+                    if (error) throw error;
 
                     if (product) {
                         setFormData({
@@ -49,14 +53,14 @@ const ProductForm = () => {
                             brand: product.brand || "",
                             price: product.price?.toString() || "",
                             category: product.category || "",
-                            colors: product.colors ? product.colors.join(", ") : "",
+                            colors: product.colors ? (Array.isArray(product.colors) ? product.colors.join(", ") : product.colors) : "",
                             sizes: product.sizes || [],
-                            images: product.images || (product.image ? [product.image] : []),
-                            buyLinks: product.buyLinks || [],
+                            images: product.images || [],
+                            buyLinks: product.buy_links || [],
                             description: product.description || "",
-                            showOnHomepage: product.showOnHomepage || false,
-                            isTopPick: product.isTopPick || false,
-                            isNewArrival: product.isNewArrival || false,
+                            showOnHomepage: product.show_on_homepage || false,
+                            isTopPick: product.is_top_pick || false,
+                            isNewArrival: product.is_new_arrival || false,
                         });
                     }
                 } catch (error) {
