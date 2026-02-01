@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cloudinary Upload Test</title>
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+</head>
+
+<body style="font-family: Arial; padding: 40px;">
+    <h1>Cloudinary Upload Test</h1>
+    <button id="uploadBtn"
+        style="padding: 10px 20px; font-size: 16px; background: #0066ff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Test Upload
+    </button>
+    <p id="status" style="margin-top: 20px; font-size: 16px;"></p>
+    <div id="result" style="margin-top: 20px;"></div>
+
+    <script>
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            const cloudName = 'ds8cnhgz1';
+            const uploadPreset = 'k-klub';
+
+            console.log('Testing with:', { cloudName, uploadPreset });
+            document.getElementById('status').textContent = 'Opening upload widget...';
+
+            const widget = window.cloudinary.createUploadWidget(
+                {
+                    cloudName: cloudName,
+                    uploadPreset: uploadPreset,
+                    multiple: false,
+                    sources: ['local'],
+                },
+                (error, result) => {
+                    if (error) {
+                        console.error('Error:', error);
+                        document.getElementById('status').textContent = '❌ Error: ' + (error.message || error.statusText || 'Unknown');
+                        document.getElementById('status').style.color = 'red';
+                        return;
+                    }
+
+                    console.log('Result:', result);
+
+                    if (result.event === 'success') {
+                        const url = result.info.secure_url;
+                        document.getElementById('status').textContent = '✅ Upload successful!';
+                        document.getElementById('status').style.color = 'green';
+                        document.getElementById('result').innerHTML = `
+                            <img src="${url}" style="max-width: 300px; border: 2px solid green; border-radius: 5px;">
+                            <p>URL: <a href="${url}" target="_blank">${url}</a></p>
+                        `;
+                    }
+                }
+            );
+
+            widget.open();
+        });
+    </script>
+</body>
+
+</html>
