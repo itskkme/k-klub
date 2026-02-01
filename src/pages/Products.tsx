@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Filter, SlidersHorizontal } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/products/ProductCard";
 import ProductFilters from "@/components/products/ProductFilters";
 import { mockProducts, priceRanges, sortOptions, Product } from "@/data/mockProducts";
@@ -233,6 +234,7 @@ const Products = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

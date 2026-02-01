@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProductCard from "@/components/products/ProductCard";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import { mockProducts } from "@/data/mockProducts";
 import { supabase } from "@/lib/supabase";
 
@@ -351,48 +352,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-background border-t border-border">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <span className="font-display text-2xl text-primary">K-KLUB</span>
-              <p className="text-muted-foreground text-sm mt-2">
-                Curated fashion for the modern man
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Shop</h4>
-              <ul className="space-y-2">
-                <li><Link to="/products" className="text-muted-foreground hover:text-foreground text-sm">All Products</Link></li>
-                <li><Link to="/products?category=Jackets" className="text-muted-foreground hover:text-foreground text-sm">Jackets</Link></li>
-                <li><Link to="/products?category=Footwear" className="text-muted-foreground hover:text-foreground text-sm">Footwear</Link></li>
-                <li><Link to="/products?category=Accessories" className="text-muted-foreground hover:text-foreground text-sm">Accessories</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Account</h4>
-              <ul className="space-y-2">
-                <li><Link to="/auth" className="text-muted-foreground hover:text-foreground text-sm">Sign In</Link></li>
-                <li><Link to="/wishlist" className="text-muted-foreground hover:text-foreground text-sm">Wishlist</Link></li>
-                <li><Link to="/settings" className="text-muted-foreground hover:text-foreground text-sm">Settings</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Support</h4>
-              <ul className="space-y-2">
-                <li><Link to="/contact" className="text-muted-foreground hover:text-foreground text-sm">Contact Us</Link></li>
-                <li><button className="text-muted-foreground hover:text-foreground text-sm">FAQs</button></li>
-                <li><button className="text-muted-foreground hover:text-foreground text-sm">Privacy Policy</button></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border pt-8 text-center">
-            <p className="text-muted-foreground text-sm">
-              © 2024 K-Klub. All rights reserved. Prices and availability may vary.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

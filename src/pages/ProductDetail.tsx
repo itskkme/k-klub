@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import gsap from "gsap";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/products/ProductCard";
 import { mockProducts } from "@/data/mockProducts";
 import { doc, getDoc } from "firebase/firestore";
@@ -607,6 +608,7 @@ const ProductDetail = () => {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 };
