@@ -25,6 +25,7 @@ const ProductForm = () => {
         sizes: [] as { size: string; price: number }[],
         images: [] as string[],
         buyLinks: [] as { platform: string; url: string }[],
+        comboProducts: [] as string[],
         description: "",
         showOnHomepage: false,
         isTopPick: false,
@@ -33,6 +34,22 @@ const ProductForm = () => {
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [loading, setLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [availableProducts, setAvailableProducts] = useState<any[]>([]);
+    const [searchCombo, setSearchCombo] = useState("");
+
+    // Fetch all products for combo selection
+    useEffect(() => {
+        const fetchAllProducts = async () => {
+            try {
+                const { supabase } = await import('@/lib/supabase');
+                const { data } = await supabase.from('products').select('id, name, brand, images, category');
+                if (data) setAvailableProducts(data);
+            } catch (error) {
+                console.error("Error fetching products list:", error);
+            }
+        };
+        fetchAllProducts();
+    }, []);
 
     useEffect(() => {
         if (isEdit && id) {
@@ -57,6 +74,7 @@ const ProductForm = () => {
                             sizes: product.sizes || [],
                             images: product.images || [],
                             buyLinks: product.buy_links || [],
+                            comboProducts: product.combo_products || [], // Load existing combos
                             description: product.description || "",
                             showOnHomepage: product.show_on_homepage || false,
                             isTopPick: product.is_top_pick || false,
@@ -142,6 +160,7 @@ const ProductForm = () => {
                 images: formData.images,
                 sizes: formData.sizes,
                 buy_links: formData.buyLinks, // Convert to snake_case
+                combo_products: formData.comboProducts, // Save combos
                 show_on_homepage: formData.showOnHomepage, // Convert to snake_case
                 is_top_pick: formData.isTopPick, // Convert to snake_case
                 is_new_arrival: formData.isNewArrival, // Convert to snake_case
@@ -605,6 +624,97 @@ const ProductForm = () => {
                                 >
                                     + Add Buy Link
                                 </button>
+                            </div>
+                        </div>
+
+                        {/* Shop the Look / Combo Products */}
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-2">Shop the Look (Combo Items)</label>
+                            <div className="space-y-4">
+                                {/* Search Combo Items */}
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="Search for products to link..."
+                                        value={searchCombo}
+                                        onChange={(e) => setSearchCombo(e.target.value)}
+                                        className="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground input-luxury"
+                                    />
+                                    {searchCombo && (
+                                        <div className="absolute z-10 w-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                            {availableProducts
+                                                .filter(p =>
+                                                    p.id !== id &&
+                                                    !formData.comboProducts.includes(p.id) &&
+                                                    (p.name.toLowerCase().includes(searchCombo.toLowerCase()) ||
+                                                        p.brand.toLowerCase().includes(searchCombo.toLowerCase()) ||
+                                                        p.category?.toLowerCase().includes(searchCombo.toLowerCase()))
+                                                )
+                                                .map(product => (
+                                                    <button
+                                                        key={product.id}
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setFormData(prev => ({
+                                                                ...prev,
+                                                                comboProducts: [...prev.comboProducts, product.id]
+                                                            }));
+                                                            setSearchCombo("");
+                                                        }}
+                                                        className="w-full flex items-center gap-3 p-3 hover:bg-secondary transition-colors text-left"
+                                                    >
+                                                        <img
+                                                            src={product.images?.[0] || ""}
+                                                            alt={product.name}
+                                                            className="w-10 h-10 object-cover rounded"
+                                                        />
+                                                        <div>
+                                                            <p className="font-medium text-foreground text-sm">{product.name}</p>
+                                                            <p className="text-xs text-muted-foreground">{product.brand}</p>
+                                                        </div>
+                                                    </button>
+                                                ))
+                                            }
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Selected Combo Items */}
+                                {formData.comboProducts.length > 0 && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {formData.comboProducts.map(comboId => {
+                                            const product = availableProducts.find(p => p.id === comboId);
+                                            if (!product) return null;
+                                            return (
+                                                <div key={comboId} className="flex items-center justify-between p-3 bg-secondary rounded-lg border border-border">
+                                                    <div className="flex items-center gap-3">
+                                                        <img
+                                                            src={product.images?.[0] || ""}
+                                                            alt={product.name}
+                                                            className="w-10 h-10 object-cover rounded"
+                                                        />
+                                                        <div>
+                                                            <p className="font-medium text-foreground text-sm line-clamp-1">{product.name}</p>
+                                                            <p className="text-xs text-muted-foreground">{product.brand}</p>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setFormData(prev => ({
+                                                                ...prev,
+                                                                comboProducts: prev.comboProducts.filter(id => id !== comboId)
+                                                            }));
+                                                        }}
+                                                        className="p-1 text-destructive hover:bg-destructive/10 rounded"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </div>
                         </div>
 

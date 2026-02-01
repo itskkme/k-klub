@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import gsap from "gsap";
 import Navbar from "@/components/layout/Navbar";
+import ProductCard from "@/components/products/ProductCard";
 import { mockProducts } from "@/data/mockProducts";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -26,6 +27,7 @@ const ProductDetail = () => {
 
   // Gallery State
   const [selectedImage, setSelectedImage] = useState("");
+  const [comboProducts, setComboProducts] = useState<any[]>([]);
 
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
@@ -64,6 +66,7 @@ const ProductDetail = () => {
             colors: data.colors || [],
             sizes: data.sizes || [],
             buyLinks: data.buy_links || [],
+            comboProducts: data.combo_products || [],
             showOnHomepage: data.show_on_homepage,
             isTopPick: data.is_top_pick,
             isNewArrival: data.is_new_arrival,
@@ -127,6 +130,43 @@ const ProductDetail = () => {
       } else if (product.image) {
         setSelectedImage(product.image);
       }
+    }
+  }, [product]);
+
+  // Fetch Combo Products
+  useEffect(() => {
+    if (product?.comboProducts?.length > 0) {
+      const fetchComboProducts = async () => {
+        try {
+          const { supabase } = await import('@/lib/supabase');
+          const { data } = await supabase
+            .from('products')
+            .select('*')
+            .in('id', product.comboProducts);
+
+          if (data) {
+            const formatted = data.map((p: any) => ({
+              id: p.id,
+              name: p.name,
+              brand: p.brand,
+              price: p.price,
+              category: p.category,
+              images: p.images || [],
+              description: p.description,
+              colors: p.colors || [],
+              sizes: p.sizes || [],
+              buyLinks: p.buy_links || [],
+              showOnHomepage: p.show_on_homepage,
+              isTopPick: p.is_top_pick,
+              isNewArrival: p.is_new_arrival,
+            }));
+            setComboProducts(formatted);
+          }
+        } catch (error) {
+          console.error("Error fetching combo products:", error);
+        }
+      };
+      fetchComboProducts();
     }
   }, [product]);
 
@@ -433,6 +473,18 @@ const ProductDetail = () => {
           </div>
         </div>
       </main>
+
+      {/* Complete the Look Section */}
+      {comboProducts.length > 0 && (
+        <section className="container mx-auto px-4 pb-20">
+          <h2 className="font-display text-3xl text-foreground mb-8">COMPLETE THE LOOK</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {comboProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Buy Now Modal */}
       {showBuyModal && (
