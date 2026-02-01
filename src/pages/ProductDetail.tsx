@@ -231,7 +231,7 @@ const ProductDetail = () => {
             <div className="flex flex-col gap-4">
               <div
                 ref={imageRef}
-                className="product-image relative h-[80px] md:h-[600px] w-full max-w-xl mx-auto rounded-xl overflow-hidden bg-secondary cursor-zoom-in"
+                className="product-image relative aspect-[3/4] md:aspect-auto md:h-[600px] w-full max-w-xl mx-auto rounded-xl overflow-hidden bg-secondary cursor-zoom-in"
                 onMouseEnter={() => setIsImageZoomed(true)}
                 onMouseLeave={() => setIsImageZoomed(false)}
                 onMouseMove={handleMouseMove}
