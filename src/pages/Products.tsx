@@ -72,8 +72,8 @@ const Products = () => {
 
     // Always update category based on URL (default to "All" if not in URL)
     setSelectedCategory(category || "All");
-    if (sort) setSortBy(sort);
-    if (gender) setSelectedGender(gender);
+    setSortBy(sort || "featured");
+    setSelectedGender(gender || "All");
   }, [searchParams]); // Re-run when URL params change
 
   // Filter and sort products
