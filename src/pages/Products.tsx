@@ -87,7 +87,8 @@ const Products = () => {
         (product) =>
           product.name.toLowerCase().includes(searchQuery) ||
           product.brand.toLowerCase().includes(searchQuery) ||
-          product.category.toLowerCase().includes(searchQuery)
+          product.category.toLowerCase().includes(searchQuery) ||
+          product.gender?.toLowerCase().includes(searchQuery)
       );
     }
 
