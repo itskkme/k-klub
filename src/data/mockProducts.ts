@@ -18,6 +18,7 @@ export interface Product {
   }[];
   trending?: boolean;
   newArrival?: boolean;
+  gender?: string;
 }
 
 export const mockProducts: Product[] = [

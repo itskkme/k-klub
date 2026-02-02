@@ -46,6 +46,7 @@ const Products = () => {
           isNewArrival: p.is_new_arrival,
           trending: p.is_top_pick,
           newArrival: p.is_new_arrival,
+          gender: p.gender,
         })) || [];
 
         // Use Supabase products or fallback to mock
@@ -60,15 +61,19 @@ const Products = () => {
     fetchProducts();
   }, []);
 
+  const [selectedGender, setSelectedGender] = useState("All");
+
   // Read initial values from URL and update when URL changes
   useEffect(() => {
     const category = searchParams.get("category");
     const search = searchParams.get("search");
     const sort = searchParams.get("sort");
+    const gender = searchParams.get("gender");
 
     // Always update category based on URL (default to "All" if not in URL)
     setSelectedCategory(category || "All");
     if (sort) setSortBy(sort);
+    if (gender) setSelectedGender(gender);
   }, [searchParams]); // Re-run when URL params change
 
   // Filter and sort products
@@ -89,6 +94,15 @@ const Products = () => {
     // Category filter
     if (selectedCategory !== "All") {
       result = result.filter((product) => product.category === selectedCategory);
+    }
+
+    // Gender filter
+    if (selectedGender !== "All") {
+      result = result.filter((product) => {
+        // Handle case sensitivity and 'Unisex' logic if needed
+        const pGender = product.gender || "Unisex";
+        return pGender === selectedGender || pGender === "Unisex";
+      });
     }
 
     // Brand filter
@@ -128,7 +142,7 @@ const Products = () => {
     }
 
     return result;
-  }, [selectedCategory, selectedBrand, selectedPriceRange, sortBy, searchParams, products]);
+  }, [selectedCategory, selectedBrand, selectedPriceRange, selectedGender, sortBy, searchParams, products]);
 
   const searchQuery = searchParams.get("search");
 
@@ -212,6 +226,8 @@ const Products = () => {
               setSortBy={setSortBy}
               isMobileFiltersOpen={isMobileFiltersOpen}
               setIsMobileFiltersOpen={setIsMobileFiltersOpen}
+              selectedGender={selectedGender}
+              setSelectedGender={setSelectedGender}
             />
 
             {/* Products Grid */}

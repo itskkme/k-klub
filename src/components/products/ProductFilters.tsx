@@ -13,6 +13,8 @@ interface ProductFiltersProps {
   setSortBy: (sort: string) => void;
   isMobileFiltersOpen: boolean;
   setIsMobileFiltersOpen: (open: boolean) => void;
+  selectedGender: string;
+  setSelectedGender: (gender: string) => void;
 }
 
 const ProductFilters = ({
@@ -26,11 +28,14 @@ const ProductFilters = ({
   setSortBy,
   isMobileFiltersOpen,
   setIsMobileFiltersOpen,
+  selectedGender,
+  setSelectedGender,
 }: ProductFiltersProps) => {
   const [expandedSections, setExpandedSections] = useState({
     category: true,
     brand: true,
     price: true,
+    gender: true,
   });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -45,12 +50,14 @@ const ProductFilters = ({
     setSelectedBrand("All Brands");
     setSelectedPriceRange(0);
     setSortBy("featured");
+    setSelectedGender("All");
   };
 
   const hasActiveFilters =
     selectedCategory !== "All" ||
     selectedBrand !== "All Brands" ||
-    selectedPriceRange !== 0;
+    selectedPriceRange !== 0 ||
+    selectedGender !== "All";
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -157,6 +164,37 @@ const ProductFilters = ({
                   }`}
               >
                 {range.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Gender Filter */}
+      <div className="border-b border-border pb-4">
+        <button
+          onClick={() => toggleSection("gender")}
+          className="w-full flex items-center justify-between text-foreground font-medium mb-3"
+        >
+          <span>Gender</span>
+          {expandedSections.gender ? (
+            <ChevronUp className="w-4 h-4" />
+          ) : (
+            <ChevronDown className="w-4 h-4" />
+          )}
+        </button>
+        {expandedSections.gender && (
+          <div className="space-y-2">
+            {["All", "Unisex", "Male", "Female"].map((gender) => (
+              <button
+                key={gender}
+                onClick={() => setSelectedGender(gender)}
+                className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${selectedGender === gender
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  }`}
+              >
+                {gender}
               </button>
             ))}
           </div>

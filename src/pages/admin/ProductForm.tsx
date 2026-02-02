@@ -30,6 +30,7 @@ const ProductForm = () => {
         showOnHomepage: false,
         isTopPick: false,
         isNewArrival: false,
+        gender: "Unisex",
     });
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [loading, setLoading] = useState(false);
@@ -79,6 +80,7 @@ const ProductForm = () => {
                             showOnHomepage: product.show_on_homepage || false,
                             isTopPick: product.is_top_pick || false,
                             isNewArrival: product.is_new_arrival || false,
+                            gender: product.gender || "Unisex",
                         });
                     }
                 } catch (error) {
@@ -163,7 +165,9 @@ const ProductForm = () => {
                 combo_products: formData.comboProducts, // Save combos
                 show_on_homepage: formData.showOnHomepage, // Convert to snake_case
                 is_top_pick: formData.isTopPick, // Convert to snake_case
+                is_top_pick: formData.isTopPick, // Convert to snake_case
                 is_new_arrival: formData.isNewArrival, // Convert to snake_case
+                gender: formData.gender,
             };
 
             // Save to Supabase
@@ -443,7 +447,6 @@ const ProductForm = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-foreground mb-2">Category</label>
                             <select
                                 name="category"
                                 value={formData.category}
@@ -455,6 +458,21 @@ const ProductForm = () => {
                                 {categories.filter(c => c !== "All").map(c => (
                                     <option key={c} value={c}>{c}</option>
                                 ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-2">Gender</label>
+                            <select
+                                name="gender"
+                                value={formData.gender}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground input-luxury"
+                            >
+                                <option value="Unisex">Unisex</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
                             </select>
                         </div>
 
