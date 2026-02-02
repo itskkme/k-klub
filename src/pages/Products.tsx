@@ -32,12 +32,12 @@ const Products = () => {
         // Convert snake_case to camelCase
         const productsData = data?.map((p: any) => ({
           id: p.id,
-          name: p.name,
-          brand: p.brand,
-          price: p.price,
-          category: p.category,
+          name: p.name || "Untitled Product",
+          brand: p.brand || "Generic",
+          price: Number(p.price) || 0,
+          category: p.category || "Uncategorized",
           images: p.images || [],
-          description: p.description,
+          description: p.description || "",
           colors: p.colors || [],
           sizes: p.sizes || [],
           buyLinks: p.buy_links || [],
@@ -46,7 +46,7 @@ const Products = () => {
           isNewArrival: p.is_new_arrival,
           trending: p.is_top_pick,
           newArrival: p.is_new_arrival,
-          gender: p.gender,
+          gender: p.gender || "Unisex",
         })) || [];
 
         // Use Supabase products or fallback to mock
