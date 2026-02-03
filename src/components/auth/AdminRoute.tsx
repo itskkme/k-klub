@@ -8,9 +8,17 @@ const AdminRoute = ({ children }: { children: ReactNode }) => {
     const { user, loading, isAdmin } = useAuth();
     const navigate = useNavigate();
 
-    // TEMPORARY BYPASS FOR DEBUGGING UPLOAD
+    if (loading) return null; // Or a loader
+
+    // Check if user is logged in AND is an admin
+    if (!user || !isAdmin) {
+        toast.error("Unauthorized access");
+        // Redirect to home if not authorized, but inside useEffect is better. 
+        // For a component restriction, returning null (and maybe redirecting) is key.
+        return null;
+    }
+
     return <>{children}</>;
-    // return user && isAdmin ? <>{children}</> : null;
 };
 
 export default AdminRoute;

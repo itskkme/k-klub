@@ -197,13 +197,15 @@ const Navbar = () => {
               >
                 Contact Us
               </Link>
-              <Link
-                to="/admin"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-2 text-foreground hover:text-primary transition-colors font-bold text-red-500"
-              >
-                Admin (Debug)
-              </Link>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-2 text-foreground hover:text-primary transition-colors font-bold text-red-500"
+                >
+                  Admin
+                </Link>
+              )}
             </div>
           </div>
         )}
