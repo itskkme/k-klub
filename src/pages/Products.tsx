@@ -82,7 +82,9 @@ const Products = () => {
 
     // Search filter
     const searchQuery = searchParams.get("search")?.toLowerCase();
-    if (searchQuery) {
+    const genericTerms = ["products", "dress", "outfits", "clothes", "clothing", "fashion", "all", "shop", "store"];
+
+    if (searchQuery && !genericTerms.includes(searchQuery)) {
       result = result.filter(
         (product) =>
           product.name.toLowerCase().includes(searchQuery) ||
