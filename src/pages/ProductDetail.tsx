@@ -10,6 +10,7 @@ import {
   X,
   Ruler,
   Check,
+  Edit,
 } from "lucide-react";
 import gsap from "gsap";
 import Navbar from "@/components/layout/Navbar";
@@ -22,7 +23,7 @@ import { db } from "@/lib/firebase";
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -352,6 +353,16 @@ const ProductDetail = () => {
                 {product.name.toUpperCase()}
               </h1>
 
+              {isAdmin && (
+                <Link
+                  to={`/admin/products/${product.id}`}
+                  className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-secondary text-primary rounded-lg hover:bg-secondary/80 transition-colors font-medium border border-primary/20"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span>Edit Product</span>
+                </Link>
+              )}
+
               <div className="product-detail flex items-baseline gap-4 mb-6">
                 <span className="text-3xl font-bold text-primary">
                   ₹{product.sizes?.find((s: any) => s.size === selectedSize)?.price || product.price}
@@ -477,143 +488,149 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-      </main>
+      </main >
 
       {/* Complete the Look Section */}
-      {comboProducts.length > 0 && (
-        <section className="container mx-auto px-4 pb-20">
-          <h2 className="font-display text-3xl text-foreground mb-8">COMPLETE THE LOOK</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {comboProducts.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-      )}
+      {
+        comboProducts.length > 0 && (
+          <section className="container mx-auto px-4 pb-20">
+            <h2 className="font-display text-3xl text-foreground mb-8">COMPLETE THE LOOK</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {comboProducts.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* Buy Now Modal */}
-      {showBuyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={() => setShowBuyModal(false)}
-          />
-          <div className="relative bg-card border border-border rounded-2xl p-6 w-full max-w-md animate-scale-in">
-            <button
+      {
+        showBuyModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div
+              className="absolute inset-0 bg-background/80 backdrop-blur-sm"
               onClick={() => setShowBuyModal(false)}
-              className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            />
+            <div className="relative bg-card border border-border rounded-2xl p-6 w-full max-w-md animate-scale-in">
+              <button
+                onClick={() => setShowBuyModal(false)}
+                className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
-            <h2 className="font-display text-2xl text-foreground mb-2">BUY NOW</h2>
-            <p className="text-muted-foreground mb-6">
-              Choose a retailer to purchase this item
-            </p>
+              <h2 className="font-display text-2xl text-foreground mb-2">BUY NOW</h2>
+              <p className="text-muted-foreground mb-6">
+                Choose a retailer to purchase this item
+              </p>
 
-            <div className="space-y-3">
-              {product.buyLinks && product.buyLinks.length > 0 ? (
-                product.buyLinks.map((link: any, index: number) => (
-                  <a
-                    key={index}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-4 bg-secondary border border-border rounded-lg hover:border-primary transition-colors group"
-                  >
-                    <div>
-                      <p className="font-medium text-foreground">{link.platform}</p>
-                      <p className="text-sm text-muted-foreground">Shop now</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                    </div>
-                  </a>
-                ))
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>No purchasing options available at the moment.</p>
-                </div>
-              )}
+              <div className="space-y-3">
+                {product.buyLinks && product.buyLinks.length > 0 ? (
+                  product.buyLinks.map((link: any, index: number) => (
+                    <a
+                      key={index}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-4 bg-secondary border border-border rounded-lg hover:border-primary transition-colors group"
+                    >
+                      <div>
+                        <p className="font-medium text-foreground">{link.platform}</p>
+                        <p className="text-sm text-muted-foreground">Shop now</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </div>
+                    </a>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p>No purchasing options available at the moment.</p>
+                  </div>
+                )}
+              </div>
+
+              <p className="text-xs text-muted-foreground mt-6 text-center">
+                Prices and availability may vary. K-Klub earns a commission from purchases.
+              </p>
             </div>
-
-            <p className="text-xs text-muted-foreground mt-6 text-center">
-              Prices and availability may vary. K-Klub earns a commission from purchases.
-            </p>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Size Chart Modal */}
-      {showSizeChart && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={() => setShowSizeChart(false)}
-          />
-          <div className="relative bg-card border border-border rounded-2xl p-6 w-full max-w-lg animate-scale-in">
-            <button
+      {
+        showSizeChart && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div
+              className="absolute inset-0 bg-background/80 backdrop-blur-sm"
               onClick={() => setShowSizeChart(false)}
-              className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            />
+            <div className="relative bg-card border border-border rounded-2xl p-6 w-full max-w-lg animate-scale-in">
+              <button
+                onClick={() => setShowSizeChart(false)}
+                className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
-            <h2 className="font-display text-2xl text-foreground mb-6">SIZE GUIDE</h2>
+              <h2 className="font-display text-2xl text-foreground mb-6">SIZE GUIDE</h2>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="py-3 px-4 text-left text-foreground">Size</th>
-                    <th className="py-3 px-4 text-left text-foreground">Chest (in)</th>
-                    <th className="py-3 px-4 text-left text-foreground">Waist (in)</th>
-                    <th className="py-3 px-4 text-left text-foreground">Length (in)</th>
-                  </tr>
-                </thead>
-                <tbody className="text-muted-foreground">
-                  <tr className="border-b border-border">
-                    <td className="py-3 px-4">S</td>
-                    <td className="py-3 px-4">36-38</td>
-                    <td className="py-3 px-4">28-30</td>
-                    <td className="py-3 px-4">27</td>
-                  </tr>
-                  <tr className="border-b border-border">
-                    <td className="py-3 px-4">M</td>
-                    <td className="py-3 px-4">38-40</td>
-                    <td className="py-3 px-4">30-32</td>
-                    <td className="py-3 px-4">28</td>
-                  </tr>
-                  <tr className="border-b border-border">
-                    <td className="py-3 px-4">L</td>
-                    <td className="py-3 px-4">40-42</td>
-                    <td className="py-3 px-4">32-34</td>
-                    <td className="py-3 px-4">29</td>
-                  </tr>
-                  <tr className="border-b border-border">
-                    <td className="py-3 px-4">XL</td>
-                    <td className="py-3 px-4">42-44</td>
-                    <td className="py-3 px-4">34-36</td>
-                    <td className="py-3 px-4">30</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4">XXL</td>
-                    <td className="py-3 px-4">44-46</td>
-                    <td className="py-3 px-4">36-38</td>
-                    <td className="py-3 px-4">31</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="py-3 px-4 text-left text-foreground">Size</th>
+                      <th className="py-3 px-4 text-left text-foreground">Chest (in)</th>
+                      <th className="py-3 px-4 text-left text-foreground">Waist (in)</th>
+                      <th className="py-3 px-4 text-left text-foreground">Length (in)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-muted-foreground">
+                    <tr className="border-b border-border">
+                      <td className="py-3 px-4">S</td>
+                      <td className="py-3 px-4">36-38</td>
+                      <td className="py-3 px-4">28-30</td>
+                      <td className="py-3 px-4">27</td>
+                    </tr>
+                    <tr className="border-b border-border">
+                      <td className="py-3 px-4">M</td>
+                      <td className="py-3 px-4">38-40</td>
+                      <td className="py-3 px-4">30-32</td>
+                      <td className="py-3 px-4">28</td>
+                    </tr>
+                    <tr className="border-b border-border">
+                      <td className="py-3 px-4">L</td>
+                      <td className="py-3 px-4">40-42</td>
+                      <td className="py-3 px-4">32-34</td>
+                      <td className="py-3 px-4">29</td>
+                    </tr>
+                    <tr className="border-b border-border">
+                      <td className="py-3 px-4">XL</td>
+                      <td className="py-3 px-4">42-44</td>
+                      <td className="py-3 px-4">34-36</td>
+                      <td className="py-3 px-4">30</td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4">XXL</td>
+                      <td className="py-3 px-4">44-46</td>
+                      <td className="py-3 px-4">36-38</td>
+                      <td className="py-3 px-4">31</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="text-xs text-muted-foreground mt-4">
+                Measurements are approximate. For the best fit, we recommend comparing to a garment you already own.
+              </p>
             </div>
-
-            <p className="text-xs text-muted-foreground mt-4">
-              Measurements are approximate. For the best fit, we recommend comparing to a garment you already own.
-            </p>
           </div>
-        </div>
-      )}
+        )
+      }
       <Footer />
-    </div>
+    </div >
   );
 };
 
