@@ -106,11 +106,13 @@ const Dashboard = () => {
                                 className="bg-card border border-border rounded-lg p-4 flex items-center justify-between shadow-sm"
                             >
                                 <div className="flex items-center gap-4">
-                                    <img
-                                        src={product.images && product.images.length > 0 ? product.images[0] : (product.image || "")}
-                                        alt={product.name}
-                                        className="w-16 h-16 object-cover rounded-md bg-secondary"
-                                    />
+                                    <Link to={`/product/${product.id}`} className="block">
+                                        <img
+                                            src={product.images && product.images.length > 0 ? product.images[0] : (product.image || "")}
+                                            alt={product.name}
+                                            className="w-16 h-16 object-cover rounded-md bg-secondary hover:opacity-80 transition-opacity"
+                                        />
+                                    </Link>
                                     <div>
                                         <h3 className="font-medium text-foreground">{product.name}</h3>
                                         <p className="text-sm text-muted-foreground">

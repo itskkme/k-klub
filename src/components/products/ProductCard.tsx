@@ -94,7 +94,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
             ref={imageRef}
             src={product.images && product.images.length > 0 ? product.images[0] : (product.image || "")}
             alt={product.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain bg-white"
           />
         </div>
 
