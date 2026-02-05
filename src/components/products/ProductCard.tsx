@@ -89,12 +89,20 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
       >
         {/* Product Image */}
         {/* Product Image Container */}
-        <div className="aspect-[3/4] w-full overflow-hidden bg-gray-100">
+        <div className="aspect-[3/4] w-full overflow-hidden relative bg-secondary/50">
+          {/* Blurred Background Layer (Fills the card) */}
+          <img
+            src={product.images && product.images.length > 0 ? product.images[0] : (product.image || "")}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover blur-xl opacity-50 scale-110"
+            aria-hidden="true"
+          />
+          {/* Main Image Layer (Fully visible) */}
           <img
             ref={imageRef}
             src={product.images && product.images.length > 0 ? product.images[0] : (product.image || "")}
             alt={product.name}
-            className="w-full h-full object-contain bg-white"
+            className="relative w-full h-full object-contain z-10 transition-transform duration-500 group-hover:scale-105"
           />
         </div>
 
