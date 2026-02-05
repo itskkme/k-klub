@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import gsap from "gsap";
+import { useAuth } from "@/contexts/AuthContext";
 import { Product } from "@/data/mockProducts";
 
 interface ProductCardProps {
@@ -31,9 +32,18 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
     }
   }, [index]);
 
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
     setIsWishlisted(!isWishlisted);
   };
 

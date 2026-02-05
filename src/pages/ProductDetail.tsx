@@ -99,6 +99,10 @@ const ProductDetail = () => {
   }, [product]);
 
   const toggleWishlist = () => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
     if (!product) return;
 
     const wishlist = JSON.parse(localStorage.getItem('k-klub-wishlist') || '[]');
